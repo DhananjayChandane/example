@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>For Janhavi</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fcefee, #fde8f2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Lock screen */
+    .lock {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #f7c6d0, #f9d9e2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      z-index: 10;
+      padding: 20px;
+    }
+
+    .lock h1 { font-weight: 500; margin-bottom: 8px; font-size: 24px; }
+    .lock p { font-size: 14px; opacity: 0.9; }
+
+    .card {
+      background: #ffffff;
+      width: 92%;
+      max-width: 480px;
+      padding: 28px 24px;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      text-align: center;
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 { color: #e75480; font-weight: 500; margin-top: 0; font-size: 22px; }
+
+    p {
+      color: #555;
+      line-height: 1.7;
+      font-size: 14.5px;
+    }
+
+    button {
+      margin-top: 18px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 30px;
+      background: #e75480;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .mute-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #fce4ec;
+      color: #e75480;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 14px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      resize: none;
+    }
+
+    .hidden { display: none; }
+
+    .heart {
+      font-size: 32px;
+      margin: 14px 0;
+      animation: beat 1.2s infinite;
+    }
+
+    @keyframes beat { 0%,100%{transform:scale(1);} 50%{transform:scale(1.2);} }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 16px;
+      opacity: 0.25;
+      animation: float 8s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(110vh); }
+      to { transform: translateY(-10vh); }
+    }
+
+    footer { margin-top: 18px; font-size: 11px; color: #999; }
+  </style>
+</head>
+<body>
+
+  <!-- Lock screen -->
+  <div class="lock" onclick="unlock()">
+    <div>
+      <h1>For Janhavi</h1>
+      <p>Tap to open</p>
+    </div>
+  </div>
+
+  <!-- Music (mobile-safe) -->
+  <audio id="music" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c0e7a66b5.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card" id="card">
+    <button class="mute-btn" onclick="toggleMusic()" id="muteBtn">Mute</button>
+
+    <h1>Hi Janhavi</h1>
+    <p id="text">We first met in 7th standard — when everything felt simple and light.</p>
+
+    <div class="heart hidden" id="centerHeart">❤️</div>
+
+    <button onclick="nextMessage()" id="nextBtn">Next</button>
+
+    <div id="replyBox" class="hidden">
+      <p>If you feel like replying, you can write here.</p>
+      <textarea id="reply" rows="4" placeholder="Your reply..."></textarea>
+      <button onclick="sendReply()">Send</button>
+    </div>
+
+    <footer>Just honest memories.</footer>
+  </div>
+
+  <script>
+    const messages = [
+      "Over time, especially around 10th standard, life slowly changed for both of us.",
+      "We didn’t argue or end anything — we just stopped talking.",
+      "Even so, the respect and good memories always remained.",
+      "Now we talk as friends, and that feels calm and mature.",
+      "Thank you for reading."
+    ];
+
+    let index = 0;
+
+    function unlock() {
+      document.querySelector('.lock').style.display = 'none';
+      document.getElementById('card').style.display = 'block';
+
+      const music = document.getElementById('music');
+      music.muted = false;
+      music.play().catch(() => {}); // required for mobile
+    }
+
+    function nextMessage() {
+      const text = document.getElementById('text');
+      const nextBtn = document.getElementById('nextBtn');
+      const replyBox = document.getElementById('replyBox');
+      const heart = document.getElementById('centerHeart');
+
+      if (index < messages.length) {
+        text.textContent = messages[index];
+        index++;
+      } else {
+        nextBtn.classList.add('hidden');
+        heart.classList.remove('hidden');
+        replyBox.classList.remove('hidden');
+      }
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById('music');
+      const btn = document.getElementById('muteBtn');
+      music.muted = !music.muted;
+      btn.textContent = music.muted ? 'Unmute' : 'Mute';
+    }
+
+    function sendReply() {
+      const msg = document.getElementById('reply').value;
+      if (!msg.trim()) return alert('Please write something 🙂');
+      const mail = `mailto:parthpatil503@gmail.com?subject=Reply from Janhavi&body=${encodeURIComponent(msg)}`;
+      window.location.href = mail;
+    }
+
+    // subtle floating hearts (mobile safe)
+    setInterval(() => {
+      const h = document.createElement('div');
+      h.className = 'floating-heart';
+      h.textContent = '❤️';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = 7 + Math.random() * 3 + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 10000);
+    }, 2000);
+  </script>
+</body>
+</html>
